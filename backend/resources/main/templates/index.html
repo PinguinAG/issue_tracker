@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello Spring Boot!</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script src="webjars/jquery/2.0.3/jquery.min.js"></script>
+    <script type="text/javascript">
+        function toJSON(formId){
+            var json = {};
+            $("#" + formId).serializeArray().map(
+                function(x){
+                    json[x.name] = x.value || '';
+                }
+            );
+
+            return json;
+        }
+
+        function postForm(formId, postUrl){
+            var json = toJSON(formId);
+            console.log(json);
+
+           $.ajax({
+               headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+               },
+               type: "POST",
+               url: postUrl,
+               data: JSON.stringify(json),
+               dataType: "json",
+               success: function() {location.reload();}
+           });
+
+           return false;
+        }
+
+        function doDelete(deleteUrl){
+           $.ajax({
+               headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+               },
+               type: "DELETE",
+               url: deleteUrl,
+               dataType: "html",
+               success: function() {location.reload();}
+           });
+
+           return false;
+        }
+
+    </script>
+</head>
+<body>
+<ul>
+    <div th:each="developer : ${developers}">
+        <li>
+            <span th:text="${developer.name}"></span>
+            <a href="#" th:onclick="'return doDelete(\'/developer/'+ ${developer.id} +'\');'">Delete</a>
+        </li>
+    </div>
+</ul>
+
+<form id="newDev" action="#" onsubmit="return postForm('newDev', '/developer/');">
+    <input type="text" name="name" value=""/>
+    <input type="submit" value="Create"/>
+</form>
+
+</body>
+</html>

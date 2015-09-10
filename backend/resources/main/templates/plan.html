@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello Spring Boot!</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script src="webjars/jquery/2.0.3/jquery.min.js"></script>
+</head>
+<body>
+<p th:text="'Only stories with estimates &lt;= ' + ${maxPoints} +' story points used.'"></p>
+
+<div th:each="weeklyPlan,iterStart : ${weeklyPlans}" style="border:1px solid #ccc">
+    <div style="margin-bottom:5px;">
+        <span th:text="${'Week ' + (iterStart.index + 1)}"/>
+        <span th:text="${'Points: ' + weeklyPlan.totalPoints + '/' + maxPoints}"/>
+        <table>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Estimation</th>
+            </tr>
+            <tr th:each="story : ${weeklyPlan.stories}">
+                <td th:text="${story.id}"></td>
+                <td th:text="${story.title}"></td>
+                <td th:text="${story.status}"></td>
+                <td th:text="${story.estimatedPoints}"></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

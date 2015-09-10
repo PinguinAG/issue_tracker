@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello Spring Boot!</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script src="../webjars/jquery/2.0.3/jquery.min.js"></script>
+    <script type="text/javascript">
+        function toJSON(formId){
+            var json = {};
+            $("#" + formId).serializeArray().map(
+                function(x){
+                    if(x.value) {
+                        json[x.name] = x.value;
+                    }
+                }
+            );
+
+            return json;
+        }
+
+        function postForm(formId, postUrl){
+            var json = toJSON(formId);
+            if (json.id) {
+                delete json.id;
+            }
+
+            if (json.issueType) {
+                delete json.issueType;
+            }
+            console.log(json);
+
+           $.ajax({
+               headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+               },
+               type: "POST",
+               url: postUrl,
+               data: JSON.stringify(json),
+               dataType: "json",
+               success: function() {location.reload();}
+           });
+
+           return false;
+        }
+
+        function doDelete(deleteUrl){
+           $.ajax({
+               headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+               },
+               type: "DELETE",
+               url: deleteUrl,
+               dataType: "html",
+               success: function() {location.reload();}
+           });
+
+           return false;
+        }
+
+
+
+        function postIssueForm(formId){
+            var json = toJSON(formId);
+
+            var url = "/";
+
+            if (json.issueType==='BUG'){
+                url += "bug/";
+            } else if (json.issueType === 'STORY'){
+                url += "story/";
+            } else {
+                alert("Type must be BUG or STORY");
+                return false;
+            }
+
+            if (json.id){
+                url += json.id;
+            }
+
+            return postForm(formId, url);
+        }
+    </script>
+</head>
+<body>
+
+<a th:href="${'?filter=open'}"
+   th:unless="${'open'.equals(#httpServletRequest.getParameter('filter'))}">
+    Open Issues Only</a>
+
+<a th:href="${'?filter=all'}"
+   th:unless="${#httpServletRequest.getParameter('filter') == null || !'open'.equals(#httpServletRequest.getParameter('filter'))}">
+    All Issues</a>
+
+<table>
+    <tr>
+        <th>Type</th>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Priority/Estimation</th>
+        <th>Action</th>
+    </tr>
+    <tr th:each="issue : ${issues}">
+        <td th:text="${issue.issueType}"></td>
+        <td th:text="${issue.title}"></td>
+        <td th:text="${issue.description}"></td>
+
+        <td th:if="${issue.issueType==T(ebuero.aatasiei.tracker.model.enums.IssueType).BUG}"
+            th:text="${T(ebuero.aatasiei.tracker.model.entities.Bug).cast(issue).status}"/>
+        <td th:if="${issue.issueType==T(ebuero.aatasiei.tracker.model.enums.IssueType).STORY}"
+            th:text="${T(ebuero.aatasiei.tracker.model.entities.Story).cast(issue).status}"/>
+
+        <td th:if="${issue.issueType==T(ebuero.aatasiei.tracker.model.enums.IssueType).BUG}"
+            th:text="${T(ebuero.aatasiei.tracker.model.entities.Bug).cast(issue).priority}"/>
+        <td th:if="${issue.issueType==T(ebuero.aatasiei.tracker.model.enums.IssueType).STORY}"
+            th:text="${T(ebuero.aatasiei.tracker.model.entities.Story).cast(issue).estimatedPoints}"/>
+
+        <td>
+            <a th:href="'issues.html?issue='+${issue.id}+'&amp;type='+${issue.issueType.toString()}">Edit</a>
+        </td>
+    </tr>
+</table>
+
+<form id="IssueForm" action="#" th:object="${editedIssue}"
+      th:onsubmit="'return postIssueForm(\'IssueForm\');'">
+
+    <h2>Create/Edit Issue:</h2>
+
+    <input type="hidden" th:field="*{id}"/>
+
+    <p>
+        Type:<input type="text" th:field="*{issueType}" th:readonly="${editedIssue.issueType!=null}"/>
+    </p>
+
+    <p>Title:<input type="text" th:field="*{title}"/></p>
+
+    <p>Description:<input type="text" th:field="*{description}"/></p>
+
+    <p>Status:<input type="text" th:field="*{status}"/></p>
+
+    <p th:if="${editedIssue.issueType==null || 'STORY'.equals(editedIssue.issueType)}">
+        Estimate: <input type="text" th:field="*{estimate}"/>
+    </p>
+
+    <p th:if="${editedIssue.issueType==null || 'BUG'.equals(editedIssue.issueType)}">
+        Priority:<input type="text" th:field="*{priority}"/>
+    </p>
+
+    <input type="button" onclick="window.location = window.location.href.split('?')[0];" value="Reset"/>
+    <input type="submit" value="Save"/>
+</form>
+
+</body>
+</html>
+
