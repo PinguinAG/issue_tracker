@@ -1,2 +1,2 @@
 # issue_tracker
-The next big thing
+The best issue tracker since invention of the issue tracker
