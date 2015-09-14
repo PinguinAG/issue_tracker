@@ -41,9 +41,7 @@ The goal is to develop a very simple issue tracker for a small team of developer
         No other constraints on the ordering of the stories exists.
         Bugs are completely ignored in this view and calculation.
         As long as no new stories are created, the distribution should remain the same. If the list of stories changes, reordering the plan is acceptable.
-        Your boss has scribbled a small picture on how he thinks that page should look:
 
-        Of course your boss is not always right ...
 
 # What you should send to us:
 
