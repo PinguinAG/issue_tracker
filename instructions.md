@@ -10,7 +10,7 @@ If you get completely stuck somewhere, feel free to ask us about clarification.
 
 # Launching the test environment
 
-please read instructions on how to run the backend at https://github.com/PinguinAG/issue_tracker/blob/master/backend/README.md
+The backend contains detailed instructions on how to build and launch it, in [README.md]( https://github.com/PinguinAG/issue_tracker/blob/master/backend/README.md)
 this also contains description for the API endpoints you can use to get data for the UI.
 
 # Technical requirements for the application
@@ -45,7 +45,7 @@ The goal is to develop a very simple issue tracker for a small team of developer
 
 # What you should send to us:
 
-* The source code of your project.
+* The source code of your project, ideally a github URL
 * A short explanation on how we can build and run your project.
-* How to access the application (the URL)
+* How to access the application (the URL) after starting it
 * A short description on the technical choices you made and why you made them. If you had problems completing the project, a short description of the problems you faced and how you would continue to resolve them if you had more time.
